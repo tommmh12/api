@@ -35,11 +35,11 @@ export class ChatService {
     }
 
     // Sanitize HTML content in message text to prevent XSS attacks (Requirements: 2.2)
-    const sanitizedMessageText = messageData.messageText 
-      ? sanitize(messageData.messageText) 
+    const sanitizedMessageText = messageData.messageText
+      ? sanitize(messageData.messageText)
       : messageData.messageText;
 
-    const messageId = await this.chatRepo.createMessage({
+    await this.chatRepo.createMessage({
       conversationId,
       senderId: messageData.senderId,
       messageText: sanitizedMessageText,

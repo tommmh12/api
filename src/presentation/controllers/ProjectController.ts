@@ -52,8 +52,8 @@ export const createProject = async (req: Request, res: Response) => {
     // Log project creation
     await auditLogger.logProjectCreate(
       userId,
-      project.id,
-      project.name,
+      (project as any).id,
+      (project as any).name,
       ipAddress
     );
 
@@ -81,7 +81,7 @@ export const updateProject = async (req: Request, res: Response) => {
     await auditLogger.logProjectUpdate(
       userId,
       id,
-      existingProject?.name || project.name,
+      (existingProject as any)?.name || (project as any).name,
       req.body,
       ipAddress
     );
@@ -110,7 +110,7 @@ export const deleteProject = async (req: Request, res: Response) => {
     await auditLogger.logProjectDelete(
       userId,
       id,
-      existingProject?.name || "Unknown",
+      (existingProject as any)?.name || "Unknown",
       ipAddress
     );
 

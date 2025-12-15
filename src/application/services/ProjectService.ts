@@ -29,7 +29,7 @@ export class ProjectService {
     };
   }
 
-  async createProject(projectData: any, userId?: string) {
+  async createProject(projectData: any, _userId?: string) {
     // Validate required fields
     if (!projectData.code || !projectData.name) {
       throw new Error("Thiếu thông tin bắt buộc");

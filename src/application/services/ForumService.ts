@@ -3,7 +3,7 @@ import { ForumPost, ForumComment } from "../../domain/entities/ForumPost.js";
 import { sanitize } from "../validators/htmlSanitizer.js";
 
 export class ForumService {
-  constructor(private forumRepository: ForumRepository) {}
+  constructor(private forumRepository: ForumRepository) { }
 
   async getAllPosts(options?: {
     status?: string;
@@ -14,7 +14,7 @@ export class ForumService {
     return await this.forumRepository.findAll(options);
   }
 
-  async getPostById(id: string, recordView = false, userId?: string): Promise<ForumPost | null> {
+  async getPostById(id: string, recordView = false, _userId?: string): Promise<ForumPost | null> {
     const post = await this.forumRepository.findById(id);
     if (post && recordView) {
       await this.forumRepository.incrementViewCount(id);
@@ -46,7 +46,7 @@ export class ForumService {
     }
 
     // Sanitize HTML content if provided to prevent XSS attacks (Requirements: 2.2)
-    const sanitizedData = postData.content 
+    const sanitizedData = postData.content
       ? { ...postData, content: sanitize(postData.content) }
       : postData;
 

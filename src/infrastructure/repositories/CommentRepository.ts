@@ -101,11 +101,11 @@ export class CommentRepository {
                 full_name: row.author_name,
                 avatar_url: row.author_avatar,
             },
-            reactions: reactions[row.id] || {
+            reactions: (reactions[row.id] || {
                 like: 0, love: 0, laugh: 0, wow: 0, sad: 0, angry: 0
-            },
+            }) as unknown as import("../../domain/entities/Comment.js").ReactionSummary,
             user_reaction: row.user_reaction,
-        }));
+        })) as unknown as Comment[];
     }
 
     /**
@@ -134,7 +134,7 @@ export class CommentRepository {
                 full_name: row.author_name,
                 avatar_url: row.author_avatar,
             },
-        };
+        } as unknown as Comment;
     }
 
     /**
@@ -214,7 +214,7 @@ export class CommentRepository {
             editor: {
                 full_name: row.editor_name,
             },
-        }));
+        })) as unknown as CommentEditHistory[];
     }
 
     /**

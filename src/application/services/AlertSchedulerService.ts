@@ -99,7 +99,7 @@ export class AlertSchedulerService {
       // Requirements: 5.3 - Error rate alerts
       await this.checkErrorRate();
 
-      alertLogger.info("Alert rules check completed", { 
+      alertLogger.info("Alert rules check completed", {
         rulesChecked: rules.length,
         resourceChecked: true,
         errorRateChecked: true
@@ -209,7 +209,7 @@ export class AlertSchedulerService {
    * Kiểm tra hợp đồng sắp hết hạn
    */
   private async checkContractExpiry(
-    rule: AlertRule
+    _rule: AlertRule
   ): Promise<AlertTrigger | null> {
     // Hiện tại table users chưa có contract_end_date, trả về null
     // TODO: Thêm field contract_end_date vào users nếu cần
@@ -238,7 +238,7 @@ export class AlertSchedulerService {
    * Kiểm tra sinh nhật sắp tới
    */
   private async checkUpcomingBirthdays(
-    rule: AlertRule
+    _rule: AlertRule
   ): Promise<AlertTrigger | null> {
     // Hiện tại table users chưa có date_of_birth, trả về null
     alertLogger.debug("Birthday check skipped - field not in schema");
@@ -269,7 +269,7 @@ export class AlertSchedulerService {
   /**
    * Kiểm tra nhân viên nghỉ phép dài
    */
-  private async checkLongLeave(rule: AlertRule): Promise<AlertTrigger | null> {
+  private async checkLongLeave(_rule: AlertRule): Promise<AlertTrigger | null> {
     // Hiện tại chưa có table leave_requests, trả về null
     alertLogger.debug("Long leave check skipped - table not in schema");
     return null;
@@ -358,9 +358,8 @@ export class AlertSchedulerService {
       affectedItems: rows.map((r) => ({
         id: r.id,
         name: r.title,
-        detail: `Quá hạn ${r.days_overdue} ngày${
-          r.project_name ? ` (${r.project_name})` : ""
-        }`,
+        detail: `Quá hạn ${r.days_overdue} ngày${r.project_name ? ` (${r.project_name})` : ""
+          }`,
       })),
     };
   }
@@ -594,9 +593,8 @@ export class AlertSchedulerService {
 
     const fullMessage =
       trigger.affectedItems.length > 5
-        ? `${trigger.message}\n\n${detailList}\n... và ${
-            trigger.affectedItems.length - 5
-          } mục khác`
+        ? `${trigger.message}\n\n${detailList}\n... và ${trigger.affectedItems.length - 5
+        } mục khác`
         : `${trigger.message}\n\n${detailList}`;
 
     // Gửi notification cho từng user
@@ -627,10 +625,10 @@ export class AlertSchedulerService {
       ]
     );
 
-    alertLogger.info("Alert sent", { 
-      ruleName: trigger.ruleName, 
-      userCount: users.length, 
-      roles: notifyRoles 
+    alertLogger.info("Alert sent", {
+      ruleName: trigger.ruleName,
+      userCount: users.length,
+      roles: notifyRoles
     });
   }
 
@@ -659,9 +657,9 @@ export class AlertSchedulerService {
   async checkResourceThresholds(): Promise<ResourceAlert[]> {
     try {
       const alerts = await resourceMonitorService.checkThresholds();
-      
+
       if (alerts.length > 0) {
-        alertLogger.warn('Resource threshold alerts detected', { 
+        alertLogger.warn('Resource threshold alerts detected', {
           alertCount: alerts.length,
           alerts: alerts.map(a => ({ resource: a.resource, level: a.level, value: a.currentValue }))
         });
@@ -715,7 +713,7 @@ export class AlertSchedulerService {
 
     const emoji = alert.level === 'critical' ? '🚨' : '⚠️';
     const title = `${emoji} Resource Alert: ${alert.resource.toUpperCase()} ${alert.level.toUpperCase()}`;
-    
+
     // Get current metrics for context
     const metrics = await resourceMonitorService.collectMetrics();
     const contextMessage = this.formatResourceContext(metrics);
@@ -748,10 +746,10 @@ export class AlertSchedulerService {
       ]
     );
 
-    alertLogger.info('Resource alert sent', { 
-      resource: alert.resource, 
+    alertLogger.info('Resource alert sent', {
+      resource: alert.resource,
       level: alert.level,
-      adminCount: admins.length 
+      adminCount: admins.length
     });
   }
 
@@ -760,7 +758,7 @@ export class AlertSchedulerService {
    */
   private formatResourceContext(metrics: import("../../infrastructure/metrics/ResourceMonitorService.js").ResourceMetrics): string {
     const formatBytes = ResourceMonitorService.formatBytes;
-    
+
     return [
       `📊 Current System Status:`,
       `• CPU: ${metrics.cpu.usagePercent}% (${metrics.cpu.cores} cores, load: ${metrics.cpu.loadAverage[0].toFixed(2)})`,
@@ -778,9 +776,9 @@ export class AlertSchedulerService {
   async checkErrorRate(): Promise<ErrorRateAlert | null> {
     try {
       const alert = errorRateMonitorService.checkThresholds();
-      
+
       if (alert) {
-        alertLogger.warn('Error rate alert detected', { 
+        alertLogger.warn('Error rate alert detected', {
           level: alert.level,
           errorRate: alert.errorRate,
           threshold: alert.threshold
@@ -832,7 +830,7 @@ export class AlertSchedulerService {
 
     const emoji = alert.level === 'critical' ? '🚨' : '⚠️';
     const title = `${emoji} Error Rate Alert: ${alert.level.toUpperCase()}`;
-    
+
     // Get error breakdown for context
     const errorsByPath = errorRateMonitorService.getErrorsByPath();
     const topErrors = Object.entries(errorsByPath)
@@ -841,7 +839,7 @@ export class AlertSchedulerService {
       .map(([path, count]) => `• ${path}: ${count} errors`)
       .join('\n');
 
-    const contextMessage = topErrors 
+    const contextMessage = topErrors
       ? `\n📍 Top Error Endpoints:\n${topErrors}`
       : '';
 
@@ -873,10 +871,10 @@ export class AlertSchedulerService {
       ]
     );
 
-    alertLogger.info('Error rate alert sent', { 
+    alertLogger.info('Error rate alert sent', {
       level: alert.level,
       errorRate: alert.errorRate,
-      adminCount: admins.length 
+      adminCount: admins.length
     });
   }
 

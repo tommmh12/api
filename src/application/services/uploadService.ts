@@ -20,10 +20,10 @@ if (!fs.existsSync(FORUM_UPLOAD_DIR)) {
 
 // Configure multer storage for comments
 const commentStorage = multer.diskStorage({
-  destination: (req, file, cb) => {
+  destination: (_req, _file, cb) => {
     cb(null, COMMENT_UPLOAD_DIR);
   },
-  filename: (req, file, cb) => {
+  filename: (_req, file, cb) => {
     const uniqueSuffix = crypto.randomUUID();
     const ext = path.extname(file.originalname);
     cb(null, `${uniqueSuffix}${ext}`);
@@ -32,7 +32,7 @@ const commentStorage = multer.diskStorage({
 
 // Configure multer storage for avatars
 const avatarStorage = multer.diskStorage({
-  destination: (req, file, cb) => {
+  destination: (_req, _file, cb) => {
     cb(null, AVATAR_UPLOAD_DIR);
   },
   filename: (req, file, cb) => {
@@ -45,10 +45,10 @@ const avatarStorage = multer.diskStorage({
 
 // Configure multer storage for forum posts
 const forumStorage = multer.diskStorage({
-  destination: (req, file, cb) => {
+  destination: (_req, _file, cb) => {
     cb(null, FORUM_UPLOAD_DIR);
   },
-  filename: (req, file, cb) => {
+  filename: (_req, file, cb) => {
     const uniqueSuffix = crypto.randomUUID();
     const ext = path.extname(file.originalname);
     cb(null, `forum-${uniqueSuffix}${ext}`);
@@ -57,7 +57,7 @@ const forumStorage = multer.diskStorage({
 
 // File filter - only allow images
 const imageFilter = (
-  req: any,
+  _req: any,
   file: Express.Multer.File,
   cb: multer.FileFilterCallback
 ) => {

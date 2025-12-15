@@ -3,7 +3,7 @@ import { NewsArticle, NewsComment } from "../../domain/entities/NewsArticle.js";
 import { sanitize } from "../validators/htmlSanitizer.js";
 
 export class NewsService {
-  constructor(private newsRepository: NewsRepository) {}
+  constructor(private newsRepository: NewsRepository) { }
 
   async getAllArticles(options?: {
     status?: string;
@@ -50,7 +50,7 @@ export class NewsService {
     }
 
     // Sanitize HTML content if provided to prevent XSS attacks (Requirements: 2.2)
-    const sanitizedData = articleData.content 
+    const sanitizedData = articleData.content
       ? { ...articleData, content: sanitize(articleData.content) }
       : articleData;
 
@@ -126,7 +126,7 @@ export class NewsService {
     commentId: string,
     status: "Approved" | "Rejected",
     moderatedBy: string,
-    notes?: string
+    _notes?: string
   ): Promise<void> {
     await this.newsRepository.moderateComment(commentId, status, moderatedBy);
   }

@@ -263,7 +263,6 @@ export const approveBooking = async (req: Request, res: Response) => {
       adminId,
       id,
       bookingData.room_name || "Unknown Room",
-      bookingData.booking_date || "Unknown Date",
       getIpAddress(req)
     );
 
@@ -323,8 +322,7 @@ export const rejectBooking = async (req: Request, res: Response) => {
       await notificationService.notifyUser(
         bookingData.user_id,
         "Đặt phòng bị từ chối",
-        `Yêu cầu đặt phòng "${bookingData.roomName}" đã bị từ chối. ${
-          reason ? `Lý do: ${reason}` : ""
+        `Yêu cầu đặt phòng "${bookingData.roomName}" đã bị từ chối. ${reason ? `Lý do: ${reason}` : ""
         }`,
         "system"
       );

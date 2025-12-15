@@ -273,7 +273,7 @@ export class DepartmentService {
       const completedTasks = tasks.filter(
         (t) => t.status === "completed"
       ).length;
-      const completionRate =
+      const _completionRate =
         totalTasks > 0 ? Math.round((completedTasks / totalTasks) * 100) : 0;
 
       // Get projects associated with department
