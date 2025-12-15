@@ -188,17 +188,9 @@ export class NewsRepository {
 
     // Update tags using batch INSERT (N+1 optimization - Requirements: 6.5)
     if (article.tags !== undefined) {
-<<<<<<< HEAD
-      await this.db.query(
-        `DELETE FROM news_article_tags WHERE article_id = ?`,
-        [id]
-      );
-      for (const tag of article.tags) {
-=======
       await this.db.query(`DELETE FROM news_article_tags WHERE article_id = ?`, [id]);
       if (article.tags.length > 0) {
         const tagValues = article.tags.map(tag => [crypto.randomUUID(), id, tag]);
->>>>>>> 92b9495 (backup 14-12)
         await this.db.query(
           `INSERT INTO news_article_tags (id, article_id, tag_name) VALUES ?`,
           [tagValues]

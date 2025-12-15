@@ -8,7 +8,6 @@ import {
   newsIdParamSchema,
   moderateNewsSchema,
   createNewsCommentSchema,
-  moderateNewsCommentSchema,
 } from "../../application/validators/schemas/index.js";
 
 const router = Router();
@@ -43,16 +42,6 @@ router.post("/comments/:commentId/moderate", NewsController.moderateComment);
 
 // Article routes with :id parameter
 router.get("/", NewsController.getAllArticles);
-<<<<<<< HEAD
-router.post("/", NewsController.createArticle);
-router.get("/:id", NewsController.getArticleById);
-router.put("/:id", NewsController.updateArticle);
-router.delete("/:id", NewsController.deleteArticle);
-router.post("/:id/moderate", NewsController.moderateArticle);
-router.post("/:id/like", NewsController.toggleLike);
-router.get("/:articleId/comments", NewsController.getComments);
-router.post("/:articleId/comments", NewsController.createComment);
-=======
 router.get("/:id", validate(newsIdParamSchema), NewsController.getArticleById);
 router.post("/", validate(createNewsSchema), NewsController.createArticle);
 router.put("/:id", validate(updateNewsSchema), NewsController.updateArticle);
@@ -61,7 +50,5 @@ router.post("/:id/moderate", validate(moderateNewsSchema), NewsController.modera
 router.post("/:id/like", validate(newsIdParamSchema), NewsController.toggleLike);
 router.get("/:articleId/comments", NewsController.getComments);
 router.post("/:articleId/comments", validate(createNewsCommentSchema), NewsController.createComment);
-router.post("/comments/:commentId/moderate", validate(moderateNewsCommentSchema), NewsController.moderateComment);
->>>>>>> 92b9495 (backup 14-12)
 
 export default router;

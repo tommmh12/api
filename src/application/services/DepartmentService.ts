@@ -10,11 +10,7 @@ import { CacheService, CacheKeys, CacheTTL } from "../../infrastructure/cache/Ca
  * - Invalidate cache on write operations
  */
 export class DepartmentService {
-<<<<<<< HEAD
-  constructor(private departmentRepository: DepartmentRepository) {}
-=======
   private cache: CacheService;
->>>>>>> 92b9495 (backup 14-12)
 
   constructor(private departmentRepository: DepartmentRepository) {
     this.cache = CacheService.getInstance();
@@ -59,10 +55,10 @@ export class DepartmentService {
     }
 
     const department = await this.departmentRepository.create(departmentData);
-    
+
     // Invalidate the all departments cache
     this.invalidateDepartmentCache();
-    
+
     return department;
   }
 
@@ -112,7 +108,7 @@ export class DepartmentService {
     }
 
     await this.departmentRepository.delete(id);
-    
+
     // Invalidate cache for this department and the list
     this.invalidateDepartmentCache(id);
   }
@@ -137,7 +133,7 @@ export class DepartmentService {
    */
   async clearDepartmentManager(deptId: string): Promise<void> {
     await this.departmentRepository.clearDepartmentManager(deptId);
-    
+
     // Invalidate cache
     this.invalidateDepartmentCache(deptId);
   }
@@ -149,7 +145,7 @@ export class DepartmentService {
   private invalidateDepartmentCache(id?: string): void {
     // Always invalidate the all departments list
     this.cache.delete(CacheKeys.departments.all());
-    
+
     // If specific ID provided, invalidate that entry too
     if (id) {
       this.cache.delete(CacheKeys.departments.byId(id));
@@ -328,10 +324,10 @@ export class DepartmentService {
       const attendanceRate =
         attendance.length > 0
           ? Math.round(
-              (attendance.filter((a) => a.status === "present").length /
-                attendance.length) *
-                100
-            )
+            (attendance.filter((a) => a.status === "present").length /
+              attendance.length) *
+            100
+          )
           : 0;
 
       return {

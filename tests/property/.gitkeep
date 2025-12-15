@@ -1,0 +1,3 @@
+# Property-based tests directory
+# Tests in this directory use fast-check for property-based testing
+# See design.md for property definitions

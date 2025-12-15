@@ -411,8 +411,8 @@ export class TaskRepository {
    */
   async updateChecklistItem(
     id: string,
-    updates: { 
-      text?: string; 
+    updates: {
+      text?: string;
       isCompleted?: boolean;
       isMandatory?: boolean;
       completedBy?: string;
@@ -433,11 +433,11 @@ export class TaskRepository {
       updateParts.push("is_mandatory = ?");
       values.push(updates.isMandatory);
     }
-    
+
     if (updates.isCompleted !== undefined) {
       updateParts.push("is_completed = ?");
       values.push(updates.isCompleted);
-      
+
       if (updates.isCompleted) {
         // Item is being checked - record completion audit fields
         updateParts.push("completed_by = ?");
@@ -489,7 +489,7 @@ export class TaskRepository {
     `;
     const [rows] = await this.db.query<RowDataPacket[]>(query, [id]);
     if (rows.length === 0) return null;
-    
+
     const row = rows[0];
     return {
       id: row.id,
@@ -569,7 +569,6 @@ export class TaskRepository {
     return rows;
   }
 
-<<<<<<< HEAD
   async getTasksByDepartment(
     departmentId: string,
     startDate?: string,
@@ -632,7 +631,8 @@ export class TaskRepository {
       id: commentId,
       content: commentData.content,
     };
-=======
+  }
+
   // --- Task Blocking (Requirements: 8.4) ---
 
   /**
@@ -645,7 +645,7 @@ export class TaskRepository {
     blockedBy: string | null
   ) {
     const blockedAt = blockedReason ? new Date() : null;
-    
+
     await this.db.query(
       `UPDATE tasks 
        SET blocked_reason = ?, blocked_at = ?, blocked_by = ?, updated_at = NOW()
@@ -688,6 +688,5 @@ export class TaskRepository {
 
     const [rows] = await this.db.query<RowDataPacket[]>(query, [projectId]);
     return rows;
->>>>>>> 92b9495 (backup 14-12)
   }
 }

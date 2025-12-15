@@ -33,7 +33,6 @@ import decisionRoutes from "./routes/decision.routes.js";
 import healthRoutes from "./routes/health.routes.js";
 import metricsRoutes from "./routes/metrics.routes.js";
 import checklistAnalyticsRoutes from "./routes/checklistAnalytics.routes.js";
-import callRoutes from "./routes/call.routes.js";
 import { SocketManager } from "../infrastructure/socket/SocketManager.js";
 import { metricsMiddleware } from "./middlewares/metrics.middleware.js";
 import { alertSchedulerService } from "../application/services/AlertSchedulerService.js";
@@ -45,13 +44,7 @@ dotenv.config();
 
 const app: Application = express();
 const httpServer = createServer(app);
-const PORT = Number(process.env.PORT) || 5000;
-
-const allowedOrigins = [
-  "http://localhost:3000",
-  "http://localhost:5173",
-  "https://studyplannerapp.io.vn",
-];
+const PORT = process.env.PORT || 5000;
 
 // Middleware
 app.use(
@@ -62,13 +55,7 @@ app.use(
 );
 app.use(
   cors({
-    origin: function (origin, callback) {
-      if (!origin || allowedOrigins.includes(origin)) {
-        callback(null, true);
-      } else {
-        callback(new Error("Not allowed by CORS"));
-      }
-    },
+    origin: ["http://localhost:3000", "http://localhost:5173"],
     credentials: true,
   })
 );
@@ -152,7 +139,6 @@ app.use("/api/handoffs", handoffRoutes);
 app.use("/api/decisions", decisionRoutes);
 app.use("/api/metrics", metricsRoutes);
 app.use("/api/analytics/checklist", checklistAnalyticsRoutes);
-app.use("/api/calls", callRoutes);
 
 // Serve uploaded files with CORS
 app.use(
@@ -175,20 +161,18 @@ app.use(globalErrorHandler);
 // Initialize Socket.IO
 const socketManager = new SocketManager(httpServer);
 
-// Attach socketManager to app for use in controllers (e.g., CallController)
-(app as any).socketManager = socketManager;
-
-httpServer.listen(PORT, "0.0.0.0", () => {
+// Start server
+httpServer.listen(PORT, () => {
   logger.info('Nexus Backend API started', {
     port: PORT,
     environment: process.env.NODE_ENV || 'development',
-    apiUrl: process.env.RENDER_EXTERNAL_URL || `http://localhost:${PORT}`,
+    apiUrl: `http://localhost:${PORT}`,
     features: ['socket.io', 'realtime-chat'],
   });
 
+  // Start Alert Scheduler (check every 30 minutes)
   alertSchedulerService.start(30 * 60 * 1000);
   logger.info('Alert scheduler started', { intervalMinutes: 30 });
 });
-
 
 export default app;
